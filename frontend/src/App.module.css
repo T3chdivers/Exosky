@@ -1,0 +1,20 @@
+.canvasContainer {
+  background: purple;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.canvas {
+  height: 100%;
+  width: 100%;
+  cursor: grab;
+  background: black;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
