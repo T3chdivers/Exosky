@@ -18,7 +18,7 @@ class ExoplanetsService:
 
         output = []
         for _, row in sorted_df.iterrows():
-            distance = (1000 / float(row[4])) * 3.26156
+            distance = (1000 / float(row["sy_dist"])) * 3.26156
 
             output.append(ExoplanetElement(
                 planet_id=str(row["pl_name"]),
