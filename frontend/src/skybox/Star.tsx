@@ -1,3 +1,4 @@
+import {useState} from "react"
 import {MathUtils, Vector3} from "three"
 
 type StarProps = {

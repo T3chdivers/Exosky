@@ -10,9 +10,9 @@ function App() {
       <Canvas camera={{fov: 10, far: 5000}}className={styles.canvas}>
         <Camera/>
         {
-          Array.from({ length: 30000 }, (_) => {
-            const yaw = Math.floor(Math.random() * 360);
-            const pitch = Math.floor(Math.random() * 360);
+          Array.from({ length: 5000 }, (_) => {
+            const yaw = Math.floor(Math.random() * 360) + Math.random();
+            const pitch = Math.floor(Math.random() * 360) + Math.random();
             return <Star yaw={yaw} pitch={pitch}/>;
           })
         }

@@ -2,7 +2,9 @@ import { useThree } from '@react-three/fiber'
 import { useEffect, useState } from 'react'
 
 export function Camera() {
-  const [grabbed, setGrabbed] = useState(false);
+  const [clicked, setClicked] = useState(false);
+  const [touched, setTouched] = useState(false);
+
   const [rotationOrigin, setRotationOrigin] = useState([0,0]);
   const [cursorOrigin, setCursorOrigin] = useState([0,0]);
   const { camera } = useThree();
@@ -11,14 +13,27 @@ export function Camera() {
     const handleClick = (cursor: MouseEvent) => {
       setRotationOrigin([camera.rotation.y, camera.rotation.x])
       setCursorOrigin([cursor.pageX, cursor.pageY])
-      setGrabbed(true);
+      setClicked(true);
     }
-    const handleClickRealease = () => {setGrabbed(false)}
+    const handleClickRealease = () => {setClicked(false)}
+
+    const handleTouch = (touch: TouchEvent) => {
+      setRotationOrigin([camera.rotation.y, camera.rotation.x])
+      setCursorOrigin([touch.targetTouches[0].clientX, touch.targetTouches[0].clientY])
+      setTouched(true);
+    }
+    const handleTouchRealease = () => {setTouched(false)}
+
+    addEventListener("touchstart", handleTouch);
+    addEventListener("touchend", handleTouchRealease);
 
     addEventListener("mousedown", handleClick);
     addEventListener("mouseup", handleClickRealease);
 
     return () => {
+      removeEventListener("touchstart", handleTouch);
+      removeEventListener("touchend", handleTouchRealease);
+
       removeEventListener("mousedown", handleClick);
       removeEventListener("mouseup", handleClickRealease);
     }
@@ -32,18 +47,38 @@ export function Camera() {
       const yOffset = cursor.pageY - yCursorOrigin; 
 
       const [xOrigin, yOrigin] = rotationOrigin;
-      const velocity = 0.003
+      const velocity = 0.001
       camera.rotation.set(yOrigin + (yOffset * velocity), xOrigin + (xOffset * velocity), 0);
     };
 
-    if (grabbed) {
+    if (clicked) {
       addEventListener("mousemove", handleMouseMove);
     } else {
       removeEventListener("mousemove", handleMouseMove);
     }
 
     return () => removeEventListener("mousemove", handleMouseMove);
-  }, [grabbed]);
+  }, [clicked]);
+
+  useEffect(() => {
+    const handleTouchMove = (touch: TouchEvent) => {
+      const [xCursorOrigin, yCursorOrigin] = cursorOrigin;
+      const xOffset = touch.targetTouches[0].clientX - xCursorOrigin;
+      const yOffset = touch.targetTouches[0].clientY - yCursorOrigin; 
+
+      const [xOrigin, yOrigin] = rotationOrigin;
+      const velocity = 0.003
+      camera.rotation.set(yOrigin + (yOffset * velocity), xOrigin + (xOffset * velocity), 0);
+    };
+
+    if (touched) {
+      addEventListener("touchmove", handleTouchMove);
+    } else {
+      removeEventListener("touchmove", handleTouchMove);
+    }
+
+    return () => removeEventListener("touchmove", handleTouchMove);
+  }, [touched]);
 
   return null;
 }
