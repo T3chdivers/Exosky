@@ -1,0 +1,28 @@
+services:
+  exosky-api:
+    image: dixennaxos/exosky:api
+    ports:
+      - "8000:8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.exosky-api.rule=Host(`exosky-api.dixen.fr`)"
+      - "traefik.http.routers.exosky-api.entrypoints=websecure"
+      - "traefik.http.routers.exosky-api.tls.certresolver=myresolver"
+    networks:
+      - traefik
+
+  exosky-front:
+    image: exosky-front
+    ports:
+      - "7589:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.exosky-front.rule=Host(`exosky.dixen.fr`)"
+      - "traefik.http.routers.exosky-front.entrypoints=websecure"
+      - "traefik.http.routers.exosky-front.tls.certresolver=myresolver"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
