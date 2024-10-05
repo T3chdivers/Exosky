@@ -9,10 +9,7 @@ export function Camera() {
 
   useEffect(() => {
     const handleClick = (cursor: MouseEvent) => {
-      console.log("camera", camera.rotation._x, camera.rotation._y);
-      console.log("cursor", cursor.pageX, cursor.pageY)
-
-      setRotationOrigin([camera.rotation._y, camera.rotation._x])
+      setRotationOrigin([camera.rotation.y, camera.rotation.x])
       setCursorOrigin([cursor.pageX, cursor.pageY])
       setGrabbed(true);
     }
@@ -30,14 +27,9 @@ export function Camera() {
 
   useEffect(() => {
     const handleMouseMove = (cursor: MouseEvent) => {
-      console.log(rotationOrigin);
-      console.log(cursorOrigin);
       const [xCursorOrigin, yCursorOrigin] = cursorOrigin;
-
       const xOffset = cursor.pageX - xCursorOrigin;
       const yOffset = cursor.pageY - yCursorOrigin; 
-
-      console.log(xOffset, yOffset);
 
       const [xOrigin, yOrigin] = rotationOrigin;
       const velocity = 0.003

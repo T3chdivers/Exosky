@@ -1,6 +1,6 @@
 import styles from './App.module.css'
 import { Canvas } from "@react-three/fiber"
-import { Camera } from "./skybox/Camera"
+import { Camera } from "./skybox/CameraController"
 
 
 function App() {
