@@ -1,4 +1,7 @@
 import numpy as np
+from astropy.coordinates import SkyCoord
+from astroquery.gaia import Gaia
+
 
 class StarsService:
     @staticmethod
