@@ -9,19 +9,17 @@ class ExoplanetsService:
     @staticmethod
     def get_exoplanets():
         file_path = os.path.join(f"{os.getcwd()}", "data", "planets.csv")
-        df = pd.read_csv(file_path)
-        selected_columns = ["pl_name", "ra", "dec", "sy_dist"]
-        filtered_df = df[selected_columns]
-        filtered_df = filtered_df[~filtered_df["sy_dist"].isnull()]
+        df = pd.read_csv(file_path, usecols=["pl_name", "ra", "dec", "sy_dist"])
+        filtered_df = df[~df["sy_dist"].isnull()]
         sorted_df = filtered_df.sort_values("sy_dist")
 
         output = []
-        for row in sorted_df.iterrows():
+        for _, row in sorted_df.iterrows():
             output.append(ExoplanetElement(
-                planet_id=str(row[1]),
-                ra=row[2],
-                dec=row[3],
-                distance=row[4]
+                planet_id=str(row["pl_name"]),
+                ra=row["ra"],
+                dec=row["dec"],
+                distance=row["sy_dist"],
             ))
 
         return output
