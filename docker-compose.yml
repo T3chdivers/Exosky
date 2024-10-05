@@ -12,9 +12,9 @@ services:
       - traefik
 
   exosky-front:
-    image: exosky-front
+    image: dixennaxos/exosky:front
     ports:
-      - "7589:80"
+      - "8001:80"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.exosky-front.rule=Host(`exosky.dixen.fr`)"
