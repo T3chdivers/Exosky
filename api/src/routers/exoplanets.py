@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 from src.services.exoplanets import ExoplanetsService
 
-from api.src.models.exoplanet_element import ExoplanetElement
+from src.models.exoplanet_element import ExoplanetElement
 
 exoplanets_router = APIRouter(prefix="/exoplanets", tags=["exoplanets"])
 
