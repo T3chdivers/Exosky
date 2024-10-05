@@ -11,23 +11,25 @@ class ExoplanetsService:
     def get_exoplanets():
         file_path = os.path.join(f"{os.getcwd()}", "data", "planets.csv")
         df = pd.read_csv(file_path)
-        selected_columns = ["pl_name", "rastr", "decstr", "sy_dist"]
+        selected_columns = ["pl_name", "ra", "dec", "sy_dist"]
         filtered_df = df[selected_columns]
         filtered_df = filtered_df[~filtered_df["sy_dist"].isnull()]
         sorted_df = filtered_df.sort_values("sy_dist")
 
         output = []
-        for row in sorted_df.itertuples():
-            distance = (1000 / float(row[4])) * 3.26156
-            ra = (15 * int(row[2][:2]) + int(row[2][3:5]) / 4 + float(row[2][6:10]) / 240) * (math.pi / 180)
-            desc = (15 * int(row[3][:3]) + int(row[3][4:6]) / 4 + float(row[3][7:9]) / 240) * (math.pi / 180)
-
+        for row in sorted_df.iterrows():
             output.append(ExoplanetElement(
-                planet_id=str(row[1]),
-                x=distance * math.cos(desc) * math.cos(ra),
-                y=distance * math.cos(desc) * math.sin(ra),
-                z=distance * math.sin(desc),
-                distance=float(row[4]) * 3.26156
+                planet_id=str(row["pl_name"]),
+                ra=row["ra"],
+                dec=row["dec"],
+                distance=row["sy_dist"]
             ))
 
         return output
+
+    @staticmethod
+    def get_exoplanet_data(exoplanet_name: str):
+        file_path = os.path.join(f"{os.getcwd()}", "data", "planets.csv")
+        df = pd.read_csv(file_path)
+        single_row = df[df['pl_name'] == exoplanet_name]
+        single_row = single_row[['pl_name', 'hostname', 'disc_facility', 'disc_telescope']]

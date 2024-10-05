@@ -41,4 +41,3 @@ class StarsService:
     def kelvin_to_hex(temp_kelvin):
         rgb = StarsService.kelvin_to_rgb(temp_kelvin)
         return StarsService.rgb_to_hex(rgb)
-    
