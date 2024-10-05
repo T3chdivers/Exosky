@@ -2,7 +2,7 @@ name: API CI
 
 on:
   push:
-    branches: [ "main", "ci" ]
+    branches: [ "main", "ci",  "api"]
     paths: ["api/**"]
 
 jobs:
