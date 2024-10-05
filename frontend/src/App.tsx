@@ -1,16 +1,13 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Canvas } from "@react-three/fiber";
+import styles from './App.module.css'
+import { Canvas } from "@react-three/fiber"
+import { Camera } from "./skybox/Camera"
 
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div id="canvas-container">
-      <Canvas>
+    <div id="canvas-container" className={styles.canvasContainer}>
+      <Canvas camera={{position: [0,0,5]}} className={styles.canvas}>
+        <Camera/>
         <mesh>
           <boxGeometry args={[2, 2, 2]} />
           <meshPhongMaterial />
