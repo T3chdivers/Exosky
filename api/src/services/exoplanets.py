@@ -18,10 +18,10 @@ class ExoplanetsService:
         output = []
         for row in sorted_df.iterrows():
             output.append(ExoplanetElement(
-                planet_id=str(row["pl_name"]),
-                ra=row["ra"],
-                dec=row["dec"],
-                distance=row["sy_dist"]
+                planet_id=str(row[1]),
+                ra=row[2],
+                dec=row[3],
+                distance=row[4]
             ))
 
         return output
