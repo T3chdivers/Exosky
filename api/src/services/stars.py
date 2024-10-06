@@ -83,7 +83,6 @@ class StarsService:
                     CIRCLE('ICRS',{target_ra},{target_dec},{search_radius})
                 )
                 AND phot_g_mean_mag < {max_mag}
-                ORDER BY distance_gspphot DESC 
             """
 
 
@@ -93,10 +92,10 @@ class StarsService:
         query = []
 
         if search_distance_o > target_distance:
-            query.append(gen_query(target_ra, target_dec, target_distance, 90, search_distance_o + target_distance, max_mag, 15000))
-            query.append(gen_query((target_ra+180)%360, (target_dec+45)%90, target_distance, search_radius, search_distance_o - target_distance, max_mag, 15000))
+            query.append(gen_query(target_ra, target_dec, target_distance, 90, search_distance_o + target_distance, max_mag, max_star_nb//2))
+            query.append(gen_query((target_ra+180)%360, (target_dec+45)%90, target_distance, search_radius, search_distance_o - target_distance, max_mag, max_star_nb//2))
         else:
-            query.append(gen_query(target_ra, target_dec, target_distance, search_radius, search_distance_o, max_mag))
+            query.append(gen_query(target_ra, target_dec, target_distance, search_radius, search_distance_o, max_mag, max_star_nb))
 
         data_df = None
         for q in query:
