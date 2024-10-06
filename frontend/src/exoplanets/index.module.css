@@ -1,48 +1,67 @@
 .canvasContainer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 
 .canvas {
-  height: 100%;
-  width: 100%;
-  background: black;
+    height: 100%;
+    width: 100%;
+    background: black;
 }
 
 .selectionMenu {
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  bottom: 1rem;
-  background: #24242475;
-  border-radius: 0.5rem;
-  backdrop-filter: blur(5px);
-  color: white;
-  padding: 1rem;
-  resize: horizontal;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    bottom: 1rem;
+    background: #24242475;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(5px);
+    color: white;
+    padding: 1rem;
+    resize: horizontal;
 
-  ul {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    overflow-y: scroll;
-    list-style: none;
+    ul {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow-y: scroll;
+        list-style: none;
 
-    li {
-      margin: 0;
-      padding: 0.75rem 1rem;
-      border-radius: 0.25rem;
-      transition: background 0.2s;
-      cursor: pointer;
-      position: relative;
+        li {
+            margin: 0;
+            padding: 0.75rem 1rem;
+            border-radius: 0.25rem;
+            transition: background 0.2s;
+            cursor: pointer;
+            position: relative;
 
-      &:hover {
-        background: #363636;
-      }
+            &:hover {
+                background: #363636;
+            }
+        }
     }
-  }
+}
+
+.divDisappears {
+    transition: opacity 0.8s;
+    animation: fadeIn 0.8s;
+}
+
+.disappears {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
