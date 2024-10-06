@@ -73,7 +73,7 @@ class StarsService:
         def gen_query(target_ra, target_dec, target_distance, search_radius, search_distance, max_mag, TOP=30000):
             return f"""
                 SELECT TOP {TOP}
-                source_id, ra, dec, parallax, pmra, pmdec, phot_g_mean_mag
+                source_id, ra, dec, parallax, pmra, pmdec, phot_g_mean_mag, teff_gspphot
                 FROM gaiadr3.gaia_source
                 WHERE
                 parallax IS NOT NULL
@@ -85,8 +85,6 @@ class StarsService:
                 AND phot_g_mean_mag < {max_mag}
                 ORDER BY distance_gspphot DESC 
             """
-        search_distance_o = 100  # distance in parsecs around the target planet
-        search_distance = min(search_distance_o, target_distance)
 
 
 
@@ -109,10 +107,10 @@ class StarsService:
             if data_df is None:
                 data_df = raw_data.to_pandas()
             else:
-                flines = len(data_df.index)
+                # flines = len(data_df.index)
                 new_data_df = raw_data.to_pandas()
                 data_df = pd.concat([data_df, new_data_df], axis=0)
-                print(f"{flines} + {len(new_data_df.index)} = {len(data_df.index)}")
+                # print(f"{flines} + {len(new_data_df.index)} = {len(data_df.index)}")
 
 
         data_df["parallax"] = data_df.apply(lambda row: abs(row["parallax"]), axis=1)  # convert parallax to parsecs
