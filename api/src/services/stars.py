@@ -39,7 +39,7 @@ class StarsService:
 
     @staticmethod
     def adjust_color_brightness(hex_color):
-        r, g, b = map(int, str(hex_color)[1:7], 2)
+        r, g, b = tuple(int(hex_color[i:i + 2], 16) for i in (1, 3, 5))
         initial_brightness = (r + g + b) // 3
         reduced_r = max(0, r - 2)
         adjustment_factor = min(1, (initial_brightness / 255) * 2)
