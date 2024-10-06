@@ -83,7 +83,6 @@ class StarsService:
                     CIRCLE('ICRS',{target_ra},{target_dec},{search_radius})
                 )
                 AND phot_g_mean_mag < {max_mag}
-                ORDER BY astrometric_n_good_obs_al DESC
             """
 
 
