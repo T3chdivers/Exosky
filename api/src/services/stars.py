@@ -4,7 +4,7 @@ import numpy as np
 from astropy import units as u
 from astropy.coordinates import SkyCoord, CartesianRepresentation, Distance
 from astroquery.gaia import Gaia
-
+import pandas as pd
 
 class StarsService:
     @staticmethod
@@ -70,30 +70,52 @@ class StarsService:
 
         max_mag = 10
 
-        query = f"""
-        SELECT TOP {max_star_nb}
-          source_id, ra, dec, parallax, pmra, pmdec, phot_g_mean_mag, teff_gspphot
-        FROM gaiadr3.gaia_source
-        WHERE
-          parallax IS NOT NULL
-          AND ABS(1000/parallax - {target_distance}) < {search_distance}
-          AND 
-          1=CONTAINS(
-            POINT('ICRS',ra,dec),
-            CIRCLE('ICRS',{target_ra},{target_dec},{search_radius})
-          )
-          AND phot_g_mean_mag <= {max_mag}
-          ORDER BY distance_gspphot DESC
-        """
+        def gen_query(target_ra, target_dec, target_distance, search_radius, search_distance, max_mag, TOP=30000):
+            return f"""
+                SELECT TOP {TOP}
+                source_id, ra, dec, parallax, pmra, pmdec, phot_g_mean_mag
+                FROM gaiadr3.gaia_source
+                WHERE
+                parallax IS NOT NULL
+                AND ABS(1000/parallax - {target_distance}) < {search_distance}
+                AND 1=CONTAINS(
+                    POINT('ICRS',ra,dec),
+                    CIRCLE('ICRS',{target_ra},{target_dec},{search_radius})
+                )
+                AND phot_g_mean_mag < {max_mag}
+                ORDER BY distance_gspphot DESC 
+            """
+        search_distance_o = 100  # distance in parsecs around the target planet
+        search_distance = min(search_distance_o, target_distance)
 
-        job = Gaia.launch_job_async(query)
-        raw_data = job.get_results()
 
-        # count the number of stars
-        print(len(raw_data))
 
-        raw_data.info()
-        data_df = raw_data.to_pandas()  # convert the data to a pandas dataframe
+        search_radius = np.arcsin(search_distance / np.sqrt((target_distance - search_distance) ** 2 + search_distance ** 2)) * 180 / np.pi
+        max_mag = 11
+
+        query = []
+
+        if search_distance_o > target_distance:
+            query.append(gen_query(target_ra, target_dec, target_distance, 90, search_distance_o + target_distance, max_mag, 15000))
+            query.append(gen_query((target_ra+180)%360, (target_dec+45)%90, search_distance_o - target_distance, search_radius, search_distance, max_mag, 15000))
+        else:
+            query.append(gen_query(target_ra, target_dec, target_distance, search_radius, search_distance_o, max_mag))
+
+        data_df = None
+        for q in query:
+        # print(q)
+            job = Gaia.launch_job_async(q)
+            raw_data = job.get_results()
+            if data_df is None:
+                data_df = raw_data.to_pandas()
+            else:
+                flines = len(data_df.index)
+                new_data_df = raw_data.to_pandas()
+                data_df = pd.concat([data_df, new_data_df], axis=0)
+                print(f"{flines} + {len(new_data_df.index)} = {len(data_df.index)}")
+
+
+        data_df["parallax"] = data_df.apply(lambda row: abs(row["parallax"]), axis=1)  # convert parallax to parsecs
         data_df["dist_earth"] = data_df.apply(lambda row: 1000 / row["parallax"],
                                               axis=1)  # calculate the distance from the parallax
 
