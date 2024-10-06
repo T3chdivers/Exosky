@@ -89,7 +89,6 @@ class StarsService:
 
 
         search_radius = np.arcsin(search_distance / np.sqrt((target_distance - search_distance) ** 2 + search_distance ** 2)) * 180 / np.pi
-        max_mag = 11
 
         query = []
 
@@ -101,16 +100,16 @@ class StarsService:
 
         data_df = None
         for q in query:
-        # print(q)
+            print(q)
             job = Gaia.launch_job_async(q)
             raw_data = job.get_results()
             if data_df is None:
                 data_df = raw_data.to_pandas()
             else:
-                # flines = len(data_df.index)
+                flines = len(data_df.index)
                 new_data_df = raw_data.to_pandas()
                 data_df = pd.concat([data_df, new_data_df], axis=0)
-                # print(f"{flines} + {len(new_data_df.index)} = {len(data_df.index)}")
+                print(f"{flines} + {len(new_data_df.index)} = {len(data_df.index)}")
 
 
         data_df["parallax"] = data_df.apply(lambda row: abs(row["parallax"]), axis=1)  # convert parallax to parsecs
