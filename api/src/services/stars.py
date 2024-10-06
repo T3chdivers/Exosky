@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 from astropy import units as u
 from astropy.coordinates import SkyCoord, CartesianRepresentation, Distance
@@ -7,6 +9,9 @@ from astroquery.gaia import Gaia
 class StarsService:
     @staticmethod
     def kelvin_to_rgb(temp_kelvin):
+        if math.isnan(temp_kelvin):
+            return 255, 255, 255
+
         # Ensure the temperature is within the typical range for visible spectrum
         temp_kelvin = max(1000, min(temp_kelvin, 40000)) / 100
 
@@ -36,22 +41,6 @@ class StarsService:
                 blue = max(0, min(255, blue))
 
         return int(red), int(green), int(blue)
-
-    @staticmethod
-    def adjust_color_brightness(hex_color):
-        r, g, b = tuple(int(hex_color[i:i + 2], 16) for i in (1, 3, 5))
-        initial_brightness = (r + g + b) // 3
-        reduced_r = max(0, r - 2)
-        adjustment_factor = min(1, (initial_brightness / 255) * 2)
-        adjusted_r = int(reduced_r * adjustment_factor)
-        adjusted_g = int(g * adjustment_factor)
-        adjusted_b = int(b * adjustment_factor)
-        total = adjusted_r + adjusted_g + adjusted_b
-        normalized_r = adjusted_r * 255 // total
-        normalized_g = adjusted_g * 255 // total
-        normalized_b = adjusted_b * 255 // total
-        new_hex_color = f"#{normalized_r:02x}{normalized_g:02x}{normalized_b:02x}"
-        return new_hex_color
 
     @staticmethod
     def rgb_to_hex(rgb):
