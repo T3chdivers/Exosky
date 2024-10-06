@@ -18,7 +18,7 @@ export function Exoplanets() {
   const [exoplanets, setExoplanets] = useState<ExoplanetDTO[] | undefined>();
 
   useEffect(() => {
-    axios.get("https://exosky-api.dixen.fr/exoplanets/").then((response) => {
+    axios.get("https://exosky-api.dixen.fr/exoplanets/").then((response: any) => {
       setExoplanets(response.data as ExoplanetDTO[]);
     });
   }, []);
