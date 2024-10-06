@@ -148,7 +148,8 @@ class StarsService:
         distance = Distance(parallax=data_df['parallax'].values * u.mas)
 
         # Add the absolute magnitude to the dataframe
-        data_df['absolute_magnitude'] = data_df['phot_g_mean_mag'] - 5 * np.log10(distance.pc) + 5
+        data_df['absolute_magnitude'] = 2
+        # data_df['absolute_magnitude'] = data_df['phot_g_mean_mag'] - 5 * np.log10(distance.pc) + 5
 
         data_df['relative_magnitude'] = data_df['absolute_magnitude'] + 5 * np.log10(data_df['dist_star']) - 5
 
