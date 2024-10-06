@@ -7,6 +7,45 @@
   right: 0;
 }
 
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.topBar {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.topBarContainer {
+    background: #24242475;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(3px);
+    color: white;
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.returnButton {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    font-size: 1.4rem;
+    transition: background 0.2s;
+
+    &:hover {
+        background: #242424;
+        transition: background 0.2s;
+    }
+}
+
 .canvas {
   height: 100%;
   width: 100%;
