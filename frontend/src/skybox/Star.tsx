@@ -1,5 +1,5 @@
 import {MathUtils, Vector3} from "three"
-import {Star as StarDTO} from "."
+import {StarDTO} from "."
 
 type StarProps = {
   star: StarDTO;

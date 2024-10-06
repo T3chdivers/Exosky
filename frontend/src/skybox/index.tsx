@@ -16,7 +16,7 @@ export type StarDTO = {
 }
 
 export function Skybox() {
-  const [stars, setStars] = useState<Star[] | undefined>();
+  const [stars, setStars] = useState<StarDTO[] | undefined>();
   const [magMin, setMagMin] = useState(-3);
   const [magMax, setMagMax] = useState(10);
   const [loading, setLoading] = useState(true);
@@ -28,8 +28,8 @@ export function Skybox() {
       {params: {x: Number(x), y: Number(y), z: Number(z), max_star_nb: 20000, search_distance: 200}}
     ).then((response: any) => {
       setStars(response.data);
-      setMagMin(Math.min(...response.data.map((star: Star) => star.mag)));
-      setMagMax(Math.max(...response.data.map((star: Star) => star.mag)));
+      setMagMin(Math.min(...response.data.map((star: StarDTO) => star.mag)));
+      setMagMax(Math.max(...response.data.map((star: StarDTO) => star.mag)));
       setLoading(false);
     });
   }, []);

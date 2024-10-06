@@ -1,5 +1,5 @@
 import { useThree } from '@react-three/fiber'
-import { useEffect, useState, Raycaster, Vector2 } from 'react'
+import { useEffect, useState } from 'react'
 
 export function Camera() {
   const [clicked, setClicked] = useState(false);
@@ -9,7 +9,7 @@ export function Camera() {
   const [cursorOrigin, setCursorOrigin] = useState([0,0]);
   const { camera } = useThree();
 
-  useEffect((event: MouseEvent) => {
+  useEffect(() => {
     const handleClick = (cursor: MouseEvent) => {
       setRotationOrigin([camera.rotation.y, camera.rotation.x])
       setCursorOrigin([cursor.pageX, cursor.pageY])
