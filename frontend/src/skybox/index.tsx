@@ -19,14 +19,15 @@ export function Skybox() {
   const { x, y ,z } = useParams();
   
   useEffect(() => {
-    axios.get("https://exosky-api.dixen.fr/stars/", {params: { x: Number(x), y: Number(y), z:Number(z), max_star_nb: 20000, search_distance: 200 }}).then((response) => {
-      setStars(response.data);
-    });
+    axios.get(
+      "https://exosky-api.dixen.fr/stars/", 
+      {params: { x: Number(x), y: Number(y), z:Number(z), max_star_nb: 20000, search_distance: 200 }}
+    ).then((response: any) => { setStars(response.data) });
   }, [x, y, z]);
 
   return (
     <div id="canvas-container" className={styles.canvasContainer}>
-      <Canvas camera={{fov: 80,far: 5000}}className={styles.canvas}>
+      <Canvas camera={{fov: 80,far: 10000}}className={styles.canvas}>
         <Camera/>
         { !!stars?.length &&
           stars.map((star) => <Star star={star}/>)

@@ -6,7 +6,7 @@ type StarProps = {
 }
 
 export function Star({star}: StarProps) {
-  const distance = 3000;
+  const distance = 6000;
 
   // Convert degrees to radians
   const yawRad = MathUtils.degToRad(star.dec);
