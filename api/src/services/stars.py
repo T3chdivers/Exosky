@@ -106,10 +106,10 @@ class StarsService:
             if data_df is None:
                 data_df = raw_data.to_pandas()
             else:
-                flines = len(data_df.index)
+                # flines = len(data_df.index)
                 new_data_df = raw_data.to_pandas()
                 data_df = pd.concat([data_df, new_data_df], axis=0)
-                print(f"{flines} + {len(new_data_df.index)} = {len(data_df.index)}")
+                # print(f"{flines} + {len(new_data_df.index)} = {len(data_df.index)}")
 
 
         data_df["parallax"] = data_df.apply(lambda row: abs(row["parallax"]), axis=1)  # convert parallax to parsecs
@@ -144,7 +144,7 @@ class StarsService:
         data_df["dec_star"] = star_cartesian.spherical.lat.value
         data_df["dist_star"] = star_cartesian.spherical.distance.value
 
-        data_df = data_df.query(f"dist_star < {search_distance}")  # filter out stars that are too far away
+        data_df = data_df.query(f"dist_star < {search_distance_o}")  # filter out stars that are too far away
 
         distance = Distance(parallax=data_df['parallax'].values * u.mas)
 
