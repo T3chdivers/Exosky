@@ -22,3 +22,7 @@ async def get_exoplanets(exoplanet_name: str):
         raise HTTPException(status_code=404, detail="Item not found")
 
     return exo_details
+
+@exoplanets_router.get("/search")
+async def search_exoplanets(search_string: str):
+    return ExoplanetsService.search_exoplanets(search_string)
