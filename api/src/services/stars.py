@@ -138,6 +138,6 @@ class StarsService:
 
         for _, row in data_df.iterrows():
             res.append({"ra": row["ra_star"], "dec": row["dec_star"], "dist": row["dist_star"],
-                        "color": StarsService.adjust_color_brightness(StarsService.kelvin_to_hex(row["teff_gspphot"])),
+                        "color": StarsService.kelvin_to_hex(row["teff_gspphot"]),
                         "mag": row["relative_magnitude"]})
         return res
