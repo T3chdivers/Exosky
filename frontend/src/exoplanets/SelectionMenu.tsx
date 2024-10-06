@@ -11,13 +11,13 @@ type SelectionMenuProps = {
 export function SelectionMenu({ exoplanets, clickHandler }: SelectionMenuProps) {
   const [exoplanetsResult, setExoplanetsResult] = useState<ExoplanetDTO[] | undefined>();
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimeout = useRef<number | null>(null); // Updated type to number
   const cancelTokenRef = useRef<CancelTokenSource | null>(null);
 
   useEffect(() => {
     // Clean up timeout when component unmounts
     return () => {
-      if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+      if (debounceTimeout.current) window.clearTimeout(debounceTimeout.current); // Use window.clearTimeout
       if (cancelTokenRef.current) cancelTokenRef.current.cancel();
     };
   }, []);
@@ -26,9 +26,9 @@ export function SelectionMenu({ exoplanets, clickHandler }: SelectionMenuProps) 
     const value = event.target.value;
     setSearchTerm(value);
 
-    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    if (debounceTimeout.current) window.clearTimeout(debounceTimeout.current); // Use window.clearTimeout
 
-    debounceTimeout.current = setTimeout(() => {
+    debounceTimeout.current = window.setTimeout(() => {
       searchHandler(value);
     }, 500); // Adjust debounce time as necessary (e.g., 300ms, 500ms)
   }
