@@ -1,17 +1,16 @@
-import {useState} from "react"
 import {MathUtils, Vector3} from "three"
+import {Star as StarDTO} from "."
 
 type StarProps = {
-  yaw: number;
-  pitch: number;
+  star: StarDTO;
 }
 
-export function Star({yaw, pitch}: StarProps) {
+export function Star({star}: StarProps) {
   const distance = 3000;
 
   // Convert degrees to radians
-  const yawRad = MathUtils.degToRad(yaw);
-  const pitchRad = MathUtils.degToRad(pitch);
+  const yawRad = MathUtils.degToRad(star.dec);
+  const pitchRad = MathUtils.degToRad(star.ra);
 
   // Calculate the direction vector
   const direction = new Vector3();
@@ -23,9 +22,9 @@ export function Star({yaw, pitch}: StarProps) {
   direction.normalize().multiplyScalar(distance);
 
   return (
-    <mesh position={[direction.x, direction.y, direction.z]}>
-      <boxGeometry args={[2, 2, 2]} />
-      <meshStandardMaterial emissive={"white"} />
+    <mesh position={[direction.x, direction.y, direction.z]} scale={star.mag}>
+      <sphereGeometry args={[2, 8, 8]}/>
+      <meshStandardMaterial emissive={star.color} />
     </mesh>
   );
 }
