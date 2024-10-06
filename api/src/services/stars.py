@@ -1,7 +1,7 @@
 import numpy as np
+from astropy import units as u
 from astropy.coordinates import SkyCoord, CartesianRepresentation
 from astroquery.gaia import Gaia
-from astropy import units as u
 
 
 class StarsService:
@@ -47,7 +47,8 @@ class StarsService:
         return StarsService.rgb_to_hex(rgb)
 
     @staticmethod
-    def get_stars(x: int | float, y: int | float, z: int | float, max_star_nb: int, search_distance: int | float = 1000):
+    def get_stars(x: int | float, y: int | float, z: int | float, max_star_nb: int,
+                  search_distance: int | float = 1000):
         cartesian_rep = CartesianRepresentation(
             [x, y, z] * u.pc
         )
@@ -66,7 +67,7 @@ class StarsService:
 
         query = f"""
         SELECT TOP {max_star_nb}
-          source_id, ra, dec, parallax, pmra, pmdec, phot_g_mean_mag
+          source_id, ra, dec, parallax, pmra, pmdec, phot_g_mean_mag, teff_gspphot
         FROM gaiadr3.gaia_source
         WHERE
           parallax IS NOT NULL
@@ -83,8 +84,6 @@ class StarsService:
         # print(query)
         job = Gaia.launch_job_async(query)
         raw_data = job.get_results()
-
-        star_data = []
 
         # count the number of stars
         print(len(raw_data))
@@ -105,9 +104,10 @@ class StarsService:
             distance=data_df["dist_earth"].values * u.pc,
             frame='icrs'
         )
-        data_df["x"] = data_df["dist_earth"] * np.cos(data_df["dec"]) * np.cos(data_df["ra"] - target_ra)
-        data_df["y"] = data_df["dist_earth"] * np.cos(data_df["dec"]) * np.sin(data_df["ra"] - target_ra)
-        data_df["z"] = data_df["dist_earth"] * np.sin(data_df["dec"])
+
+        data_df["x"] = star_spheric.cartesian.x.value
+        data_df["y"] = star_spheric.cartesian.y.value
+        data_df["z"] = star_spheric.cartesian.z.value
 
         # calculate the spherical coordinates with the target planet as the origin
         star_cartesian = SkyCoord(
@@ -126,5 +126,6 @@ class StarsService:
         res = []
 
         for _, row in data_df.iterrows():
-            res.append({"ra": row["ra_star"], "dec": row["dec_star"], "dist": row["dist_star"]})
+            res.append({"ra": row["ra_star"], "dec": row["dec_star"], "dist": row["dist_star"],
+                        "color": StarsService.kelvin_to_hex(row["teff_gspphot"])})
         return res
