@@ -94,7 +94,7 @@ class StarsService:
 
         if search_distance_o > target_distance:
             query.append(gen_query(target_ra, target_dec, target_distance, 90, search_distance_o + target_distance, max_mag, 15000))
-            query.append(gen_query((target_ra+180)%360, (target_dec+45)%90, search_distance_o - target_distance, search_radius, search_distance, max_mag, 15000))
+            query.append(gen_query((target_ra+180)%360, (target_dec+45)%90, target_distance, search_radius, search_distance_o - target_distance, max_mag, 15000))
         else:
             query.append(gen_query(target_ra, target_dec, target_distance, search_radius, search_distance_o, max_mag))
 
