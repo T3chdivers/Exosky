@@ -14,15 +14,6 @@ export function Camera() {
       setRotationOrigin([camera.rotation.y, camera.rotation.x])
       setCursorOrigin([cursor.pageX, cursor.pageY])
       setClicked(true);
-      
-      const raycaster = new Raycaster();
-      
-      const x = ( cursor.clientX / window.innerWidth ) * 2 - 1;
-      const y = - ( cursor.clientY / window.innerHeight ) * 2 + 1;
-      
-      raycaster.setFromCamera( new Vector2(x, y), camera );
-
-      console.log(raycaster);
     }
     const handleClickRealease = () => {setClicked(false)}
 
