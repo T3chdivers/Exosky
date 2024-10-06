@@ -53,7 +53,7 @@ class StarsService:
 
     @staticmethod
     def get_stars(x: int | float, y: int | float, z: int | float, max_star_nb: int,
-                  search_distance: int | float = 1000):
+                  search_distance_o: int | float = 1000):
         cartesian_rep = CartesianRepresentation(
             [x, y, z] * u.pc
         )
@@ -64,7 +64,7 @@ class StarsService:
         target_dec = target_coord.dec.deg  # Declination in degrees
         target_distance = target_coord.distance.pc  # Distance in parsecs
 
-        search_distance = min(search_distance, target_distance)
+        search_distance = min(search_distance_o, target_distance)
         search_radius = np.arcsin(
             search_distance / np.sqrt((target_distance - search_distance) ** 2 + search_distance ** 2)) * 180 / np.pi
 
