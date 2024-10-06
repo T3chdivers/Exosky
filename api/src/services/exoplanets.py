@@ -36,3 +36,8 @@ class ExoplanetsService:
         df = pd.read_csv(file_path)
         single_row = df[df['pl_name'] == exoplanet_name]
         single_row = single_row[['pl_name', 'hostname', 'disc_facility', 'disc_telescope']]
+
+        data = single_row.to_dict(orient='records')
+        if len(data) == 0:
+            return None
+        return data[0]
