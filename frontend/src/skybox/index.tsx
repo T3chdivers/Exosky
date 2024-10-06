@@ -7,7 +7,7 @@ import {useParams} from "react-router-dom"
 import axios from "axios"
 import {Loader} from "../exoplanets/Loader.tsx";
 
-export type Star = {
+export type StarDTO = {
   color: string;
   dec: number;
   dist: number;
@@ -32,7 +32,7 @@ export function Skybox() {
       setMagMax(Math.max(...response.data.map((star: Star) => star.mag)));
       setLoading(false);
     });
-  }, [x, y, z]);
+  }, []);
 
   return (<div>
     <div id="canvas-container" className={styles.canvasContainer}>
