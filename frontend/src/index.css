@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "RedditMono";
+  src:
+    url("RedditMono.ttf") format("truetype"),
+}
+
+* {
+  font-family: "RedditMono";
+}
