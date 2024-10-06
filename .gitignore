@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+data
+output_plots
 
 # Editor directories and files
 .vscode/*
