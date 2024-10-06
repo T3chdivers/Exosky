@@ -1,7 +1,6 @@
-.selectionMenu {
+.exoplanetCard {
   position: fixed;
-  top: 1rem;
-  left: 1rem;
+  right: 1rem;
   bottom: 1rem;
   z-index: 1;
   background: #24242475;
@@ -20,11 +19,8 @@
     padding: 0;
     height: 100%;
     width: 100%;
-    list-style: none;
-
     overflow-y: scroll;
-    scrollbar-color: #242424 #363636;
-    scrollbar-width: thin;
+    list-style: none;
 
     li {
       margin: 0;
@@ -51,16 +47,22 @@
   padding: 0;
 }
 
-.searchInput {
-    background: #363636;
+.buttonContainer {
+    display: flex;
+    gap: 1rem;
+    justify-content: end;
+}
+
+.buttonContainer button {
+    background: #242424;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
-}
+    cursor: pointer;
+    transition: background 0.2s;
 
-.resultCount {
-    margin: 0;
-    padding: 0;
-  font-size: 0.80rem;
+    &:hover {
+        background: #363636;
+    }
 }

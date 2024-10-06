@@ -9,7 +9,7 @@ export function App() {
       element: <Exoplanets />,
     },
     {
-      path: "/:x/:y/:z",
+      path: "/:x/:y/:z/:name",
       element: <Skybox />,
     },
     {

@@ -5,6 +5,7 @@ import axios from "axios"
 import {Earth} from "./Earth"
 import {SelectionMenu} from "./SelectionMenu"
 import {Exoplanet} from "./Exoplanet"
+import {ExoplanetCard} from "./ExoplanetCard.tsx";
 
 export type ExoplanetDTO = {
   planet_id: string;
@@ -16,6 +17,7 @@ export type ExoplanetDTO = {
 
 export function Exoplanets() {
   const [exoplanets, setExoplanets] = useState<ExoplanetDTO[] | undefined>();
+  const [selectedExoplanet, setSelectedExoplanet] = useState<ExoplanetDTO | null>(null);
 
   useEffect(() => {
     if (localStorage.getItem("exoplanets")) {
@@ -30,6 +32,10 @@ export function Exoplanets() {
     });
   }, []);
 
+  function clickHandler(exoplanet: ExoplanetDTO) {
+    setSelectedExoplanet(exoplanet);
+  }
+
   return (
     <div id="canvas-container" className={styles.canvasContainer}>
       <Canvas camera={{far: 5000, position: [6, 5, -2]}} className={styles.canvas}>
@@ -37,7 +43,8 @@ export function Exoplanets() {
         {!!exoplanets?.length && exoplanets.map((exoplanet: ExoplanetDTO) => <Exoplanet exoplanet={exoplanet}/>)}
         <ambientLight intensity={0.1}/>
       </Canvas>
-      <SelectionMenu exoplanets={exoplanets}/>
+      <SelectionMenu clickHandler={clickHandler} exoplanets={exoplanets}/>
+      { selectedExoplanet && <ExoplanetCard exoplanet={selectedExoplanet}></ExoplanetCard> }
     </div>
   );
 }
