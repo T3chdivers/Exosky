@@ -1,11 +1,12 @@
 import styles from './index.module.css'
 import {Canvas} from "@react-three/fiber"
-import {Camera} from "./CameraController"
+// import {Camera} from "./CameraController"
 import {Star} from "./Star"
-import {useEffect, useState} from "react"
+import {useEffect, useRef, useState} from "react"
 import {useParams} from "react-router-dom"
 import axios from "axios"
 import {Loader} from "../exoplanets/Loader.tsx";
+import {CameraControls} from "@react-three/drei";
 
 export type StarDTO = {
   color: string;
@@ -22,6 +23,8 @@ export function Skybox() {
   const [loading, setLoading] = useState(true);
   const {x, y, z, name} = useParams();
 
+  const cameraControlRef = useRef<CameraControls | null>(null);
+
   useEffect(() => {
     axios.get(
       "https://exosky-api.dixen.fr/stars/",
@@ -37,7 +40,7 @@ export function Skybox() {
   return (<div>
     <div id="canvas-container" className={styles.canvasContainer}>
       <Canvas camera={{fov: 80, far: 10000}} className={styles.canvas}>
-        <Camera/>
+        <CameraControls polarRotateSpeed={0.5} azimuthRotateSpeed={0.5} dollySpeed={0} ref={cameraControlRef}/>
         {!!stars?.length &&
           stars.map((star) => <Star star={star} magMax={magMax} magMin={magMin}/>)
         }
@@ -45,7 +48,7 @@ export function Skybox() {
       </Canvas>
     </div>
     {loading && <div className={styles.loader}>
-      <Loader/>
+        <Loader/>
     </div>}
     {!loading && <div className={styles.topBar}>
         <button onClick={() => window.history.back()} className={`${styles.topBarContainer} ${styles.returnButton}`}>
