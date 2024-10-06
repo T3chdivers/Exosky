@@ -1,6 +1,6 @@
 import numpy as np
 from astropy import units as u
-from astropy.coordinates import SkyCoord, CartesianRepresentation
+from astropy.coordinates import SkyCoord, CartesianRepresentation, Distance
 from astroquery.gaia import Gaia
 
 
@@ -78,10 +78,9 @@ class StarsService:
             CIRCLE('ICRS',{target_ra},{target_dec},{search_radius})
           )
           AND phot_g_mean_mag <= {max_mag}
-          ORDER BY distance_gspphot ASC
+          ORDER BY distance_gspphot DESC
         """
 
-        # print(query)
         job = Gaia.launch_job_async(query)
         raw_data = job.get_results()
 
@@ -123,9 +122,16 @@ class StarsService:
 
         data_df = data_df.query(f"dist_star < {search_distance}")  # filter out stars that are too far away
 
+        distance = Distance(parallax=data_df['parallax'].values * u.mas)
+
+        # Add the absolute magnitude to the dataframe
+        data_df['absolute_magnitude'] = data_df['phot_g_mean_mag'] - 5 * np.log10(distance.pc) + 5
+
+        data_df['relative_magnitude'] = data_df['absolute_magnitude'] + 5 * np.log10(data_df['dist_star']) - 5
+
         res = []
 
         for _, row in data_df.iterrows():
             res.append({"ra": row["ra_star"], "dec": row["dec_star"], "dist": row["dist_star"],
-                        "color": StarsService.kelvin_to_hex(row["teff_gspphot"])})
+                        "color": StarsService.kelvin_to_hex(row["teff_gspphot"]), "mag": row["relative_magnitude"]})
         return res
