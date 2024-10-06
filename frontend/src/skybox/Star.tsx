@@ -3,9 +3,11 @@ import {Star as StarDTO} from "."
 
 type StarProps = {
   star: StarDTO;
+  magMax: number;
+  magMin: number;
 }
 
-export function Star({star}: StarProps) {
+export function Star({star, magMin, magMax}: StarProps) {
   const distance = 6000;
 
   // Convert degrees to radians
@@ -22,9 +24,20 @@ export function Star({star}: StarProps) {
   direction.normalize().multiplyScalar(distance);
 
   return (
-    <mesh position={[direction.x, direction.y, direction.z]} scale={star.mag}>
+    <mesh position={[direction.x, direction.y, direction.z]} scale={14 * scaleValue(star.mag)}>
       <sphereGeometry args={[2, 8, 8]}/>
-      <meshStandardMaterial emissive={star.color} />
+      <meshStandardMaterial transparent opacity={scaleValue(star.mag, magMin, magMax)} emissive={star.color}/>
     </mesh>
   );
+}
+
+function scaleValue(input: number, inputMin: number = -3, inputMax: number = 10): number {
+  const outputMin: number = 1;
+  const outputMax: number = 0.30;
+
+  if (input < inputMin) return outputMin;
+  if (input > inputMax) return outputMax;
+
+  const scaledInput: number = (input - inputMin) / (inputMax - inputMin);
+  return outputMin + scaledInput * (outputMax - outputMin);
 }

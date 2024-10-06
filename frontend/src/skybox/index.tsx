@@ -16,13 +16,19 @@ export type Star = {
 
 export function Skybox() {
   const [stars, setStars] = useState<Star[] | undefined>();
+  const [magMin, setMagMin] = useState(-3);
+  const [magMax, setMagMax] = useState(10);
   const { x, y ,z } = useParams();
   
   useEffect(() => {
     axios.get(
       "https://exosky-api.dixen.fr/stars/", 
       {params: { x: Number(x), y: Number(y), z:Number(z), max_star_nb: 20000, search_distance: 200 }}
-    ).then((response: any) => { setStars(response.data) });
+    ).then((response: any) => {
+      setStars(response.data);
+      setMagMin(Math.min(...response.data.map((star: Star) => star.mag)));
+      setMagMax(Math.max(...response.data.map((star: Star) => star.mag)));
+    });
   }, [x, y, z]);
 
   return (
@@ -30,7 +36,7 @@ export function Skybox() {
       <Canvas camera={{fov: 80,far: 10000}}className={styles.canvas}>
         <Camera/>
         { !!stars?.length &&
-          stars.map((star) => <Star star={star}/>)
+          stars.map((star) => <Star star={star} magMax={magMax} magMin={magMin}/>)
         }
         <ambientLight intensity={0.1} />
       </Canvas>
