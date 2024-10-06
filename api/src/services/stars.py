@@ -38,6 +38,22 @@ class StarsService:
         return int(red), int(green), int(blue)
 
     @staticmethod
+    def adjust_color_brightness(hex_color: str):
+        r, g, b = map(int, hex_color[1:7], 2)
+        initial_brightness = (r + g + b) // 3
+        reduced_r = max(0, r - 2)
+        adjustment_factor = min(1, (initial_brightness / 255) * 2)
+        adjusted_r = int(reduced_r * adjustment_factor)
+        adjusted_g = int(g * adjustment_factor)
+        adjusted_b = int(b * adjustment_factor)
+        total = adjusted_r + adjusted_g + adjusted_b
+        normalized_r = adjusted_r * 255 // total
+        normalized_g = adjusted_g * 255 // total
+        normalized_b = adjusted_b * 255 // total
+        new_hex_color = f"#{normalized_r:02x}{normalized_g:02x}{normalized_b:02x}"
+        return new_hex_color
+
+    @staticmethod
     def rgb_to_hex(rgb):
         return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
 
@@ -133,5 +149,6 @@ class StarsService:
 
         for _, row in data_df.iterrows():
             res.append({"ra": row["ra_star"], "dec": row["dec_star"], "dist": row["dist_star"],
-                        "color": StarsService.kelvin_to_hex(row["teff_gspphot"]), "mag": row["relative_magnitude"]})
+                        "color": StarsService.adjust_color_brightness(StarsService.kelvin_to_hex(row["teff_gspphot"])),
+                        "mag": row["relative_magnitude"]})
         return res
