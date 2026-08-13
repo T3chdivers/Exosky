@@ -16,8 +16,6 @@ export function Exoplanet({exoplanet}: ExoplanetProps) {
       ref.current.rotation.y += delta/15
     }
   });
-  
-  console.log("oui")
 
   return (
     <mesh ref={ref} position={[exoplanet.x * eloignmentVector, exoplanet.y * eloignmentVector, exoplanet.z * eloignmentVector]} scale={0.03}>
