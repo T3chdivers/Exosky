@@ -8,6 +8,7 @@ import {Exoplanet} from "./Exoplanet"
 import {ExoplanetCard} from "./ExoplanetCard.tsx";
 import {useNavigate} from "react-router-dom";
 import {CameraControls} from "@react-three/drei";
+import {API_BASE_URL} from "../apiConfig";
 
 export type ExoplanetDTO = {
   planet_id: string;
@@ -33,7 +34,7 @@ export function Exoplanets() {
       return;
     }
 
-    axios.get("https://exosky-api.dixen.fr/exoplanets/").then((response: any) => {
+    axios.get(`${API_BASE_URL}/exoplanets/`).then((response: any) => {
       setExoplanets(response.data as ExoplanetDTO[]);
 
       localStorage.setItem("exoplanets", JSON.stringify(response.data));

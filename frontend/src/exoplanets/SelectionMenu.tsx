@@ -2,6 +2,7 @@ import { ExoplanetDTO } from ".";
 import styles from "./SelectionMenu.module.css"
 import axios, {CancelTokenSource} from "axios";
 import {useEffect, useRef, useState} from "react";
+import {API_BASE_URL} from "../apiConfig";
 
 type SelectionMenuProps = {
   exoplanets?: ExoplanetDTO[]
@@ -48,7 +49,7 @@ export function SelectionMenu({ exoplanets, clickHandler }: SelectionMenuProps) 
     cancelTokenRef.current = axios.CancelToken.source();
 
     axios
-      .get(`https://exosky-api.dixen.fr/exoplanets/search?search_string=${searchString}`, {
+      .get(`${API_BASE_URL}/exoplanets/search?search_string=${searchString}`, {
         cancelToken: cancelTokenRef.current.token,
       })
       .then((response: any) => {

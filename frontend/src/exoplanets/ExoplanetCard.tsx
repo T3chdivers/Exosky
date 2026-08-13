@@ -2,6 +2,7 @@ import styles from "./ExoplanetCard.module.css";
 import {ExoplanetDTO} from "./index.tsx";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {API_BASE_URL} from "../apiConfig";
 
 interface ExoplanetCardProps {
   exoplanet: ExoplanetDTO | undefined;
@@ -24,7 +25,7 @@ export function ExoplanetCard({exoplanet, skyView, close}: ExoplanetCardProps) {
       return;
     }
 
-    axios.get(`https://exosky-api.dixen.fr/exoplanets/name?exoplanet_name=${exoplanet.planet_id}`).then((response: any) => {
+    axios.get(`${API_BASE_URL}/exoplanets/name?exoplanet_name=${exoplanet.planet_id}`).then((response: any) => {
       setExoplanetDetails(response.data as ExoplanetDetails);
     });
   }, [exoplanet]);

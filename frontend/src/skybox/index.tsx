@@ -7,6 +7,7 @@ import {useParams} from "react-router-dom"
 import axios from "axios"
 import {Loader} from "../exoplanets/Loader.tsx";
 import {CameraControls} from "@react-three/drei";
+import {API_BASE_URL} from "../apiConfig";
 
 export type StarDTO = {
   color: string;
@@ -27,7 +28,7 @@ export function Skybox() {
 
   useEffect(() => {
     axios.get(
-      "https://exosky-api.dixen.fr/stars/",
+      `${API_BASE_URL}/stars/`,
       {params: {x: Number(x), y: Number(y), z: Number(z), max_star_nb: 20000, search_distance: 200}}
     ).then((response: any) => {
       setStars(response.data);
