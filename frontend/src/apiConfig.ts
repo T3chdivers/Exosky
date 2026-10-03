@@ -1,1 +1,1 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "https://exosky-api.dixen.fr";
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "https://api.exosky.dixen.fr";
