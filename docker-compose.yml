@@ -1,28 +1,38 @@
 services:
   exosky-api:
     image: dixennaxos/exosky:api
-    ports:
-      - "8000:8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.exosky-api.rule=Host(`exosky-api.dixen.fr`)"
-      - "traefik.http.routers.exosky-api.entrypoints=websecure"
-      - "traefik.http.routers.exosky-api.tls.certresolver=myresolver"
+    container_name: exosky-api
+    restart: unless-stopped
     networks:
       - traefik
+      - exosky
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.exosky-api.rule=Host(`api.exosky.dixen.fr`)"
+      - "traefik.http.routers.exosky-api.entrypoints=websecure"
+      - "traefik.http.routers.exosky-api.tls.certresolver=myresolver"
+      - "traefik.http.services.exosky-api.loadbalancer.server.port=8000"
 
   exosky-front:
     image: dixennaxos/exosky:front
-    ports:
-      - "8001:80"
+    container_name: exosky-front
+    restart: unless-stopped
+    depends_on:
+      - exosky-api
+    networks:
+      - traefik
+      - exosky
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
       - "traefik.http.routers.exosky-front.rule=Host(`exosky.dixen.fr`)"
       - "traefik.http.routers.exosky-front.entrypoints=websecure"
       - "traefik.http.routers.exosky-front.tls.certresolver=myresolver"
-    networks:
-      - traefik
+      - "traefik.http.services.exosky-front.loadbalancer.server.port=80"
 
 networks:
   traefik:
     external: true
+  exosky:
+    driver: bridge
