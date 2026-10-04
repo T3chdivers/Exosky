@@ -39,7 +39,7 @@ jobs:
           password: ${{ secrets.SERVER_PWD }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd exosky/
+            cd Exosky/
             docker compose pull 
             docker compose up -d
             docker image prune -f
