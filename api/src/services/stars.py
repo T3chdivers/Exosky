@@ -76,7 +76,7 @@ class StarsService:
                 source_id, ra, dec, parallax, pmra, pmdec, phot_g_mean_mag, teff_gspphot
                 FROM gaiadr3.gaia_source
                 WHERE
-                parallax IS NOT NULL
+                parallax > 0
                 AND ABS(1000/parallax - {target_distance}) < {search_distance}
                 AND 1=CONTAINS(
                     POINT('ICRS',ra,dec),
@@ -100,7 +100,8 @@ class StarsService:
         data_df = None
         for q in query:
             print(q)
-            job = Gaia.launch_job_async(q)
+            # Gaia's async queue is unstable during the DR4 migration; sync is much faster
+            job = Gaia.launch_job(q)
             raw_data = job.get_results()
             if data_df is None:
                 data_df = raw_data.to_pandas()
