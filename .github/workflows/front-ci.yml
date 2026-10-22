@@ -5,12 +5,43 @@ on:
     branches: [ "main", "ci" ]
     paths: ["frontend/**"]
 
+permissions:
+  contents: write
+
+concurrency:
+  group: release-front
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute next version
+        id: version
+        env:
+          PREFIX: front-v
+          SCOPE: frontend/
+        run: |
+          last=$(git describe --tags --abbrev=0 --match "${PREFIX}[0-9]*" 2>/dev/null || true)
+          if [ -z "$last" ]; then
+            next="1.0.0"
+          else
+            IFS=. read -r major minor patch <<< "${last#"$PREFIX"}"
+            log=$(git log --format='%s%n%b' "$last"..HEAD -- $SCOPE)
+            if grep -qE '^[a-z]+(\(.+\))?!:|BREAKING CHANGE' <<< "$log"; then next="$((major+1)).0.0"
+            elif grep -qE '^feat(\(.+\))?:' <<< "$log"; then next="$major.$((minor+1)).0"
+            else next="$major.$minor.$((patch+1))"; fi
+          fi
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            next="$next-${GITHUB_REF_NAME//\//-}.${GITHUB_SHA::7}"
+          fi
+          echo "version=$next" >> "$GITHUB_OUTPUT"
+          echo "Next version: $next"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -30,7 +61,15 @@ jobs:
           context: ./frontend
           pull: true
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/exosky:front
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/exosky:front
+            ${{ secrets.DOCKERHUB_USERNAME }}/exosky:front-${{ steps.version.outputs.version }}
+
+      - name: Tag release
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git tag "front-v${{ steps.version.outputs.version }}"
+          git push origin "front-v${{ steps.version.outputs.version }}"
 
       - name: Redeploy
         uses: appleboy/ssh-action@master
