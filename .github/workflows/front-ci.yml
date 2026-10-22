@@ -28,6 +28,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
+          pull: true
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/exosky:front
 
